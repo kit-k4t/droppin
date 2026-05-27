@@ -199,13 +199,15 @@ function initMap() {
     map = L.map('map', {
         center: [14.5995, 120.9842],
         zoom: 13,
-        worldCopyJump: true
+        maxBounds: [[-85, -180], [85, 180]],
+        maxBoundsViscosity: 1.0
     });
     
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',
-        maxZoom: 20
+        maxZoom: 20,
+        noWrap: true
     }).addTo(map);
 
     if (navigator.geolocation) {
@@ -457,9 +459,7 @@ function buildPinPopup(pin) {
 }
 
 function addPinToMap(pin) {
-    const marker = L.marker([parseFloat(pin.lat), parseFloat(pin.lng)], {
-        worldCopyJump: true
-    }).addTo(map);
+    const marker = L.marker([parseFloat(pin.lat), parseFloat(pin.lng)]).addTo(map);
     
     const popup = buildPinPopup(pin);
     marker.bindPopup(popup);
