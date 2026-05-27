@@ -196,11 +196,17 @@ function showComingSoon() {
 // ============================================
 
 function initMap() {
+
+    const southWest = L.latLng(-85, -180);
+    const northEast = L.latLng(85, 180);
+    const bounds = L.latLngBounds(southWest, northEast);
+
     map = L.map('map', {
         center: [14.5995, 120.9842],
         zoom: 13,
-        maxBounds: [[-85, -180], [85, 180]],
-        maxBoundsViscosity: 1.0
+        maxBounds: bounds,             
+        maxBoundsViscosity: 1.0,      
+        worldCopyJump: false         
     });
     
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -233,6 +239,14 @@ function initMap() {
     
     map.on('click', (e) => {
         if (!IS_DROP_MODE) return;
+
+        const validBounds = L.latLngBounds(L.latLng(-85, -180), L.latLng(85, 180));
+        if (!validBounds.contains(e.latlng)) {
+            playSound('error');
+            showToast(' ❌  You cannot drop a pin outside the map boundaries!');
+            return;
+        }
+
         playSound('click');
         if (tempMarker) map.removeLayer(tempMarker);
         tempMarker = L.marker(e.latlng).addTo(map);
@@ -390,11 +404,11 @@ async function loadPins() {
 
         if (error) throw error;
 
+         window._lastLoadedPins = pins;
+
         pins.forEach(pin => {
             addPinToMap(pin);
         });
-
-        window._lastLoadedPins = pins;
         
     } catch (err) {
         console.error('Failed to load pins:', err);
