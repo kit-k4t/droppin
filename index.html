@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DropPin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <!-- ==================== -->
+    <!-- LOADING SCREEN       -->
+    <!-- ==================== -->
+     
+    <div id="loading-screen">
+        <div class="loading-logo">📍</div>
+        <div class="loading-text">DropPin</div>
+        <div class="loading-subtext">Loading...</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+        <div class="loading-dots">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- WELCOME SCREEN       -->
+    <!-- ==================== -->
+
+    <div id="welcome-screen">
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        
+        <div class="welcome-content">
+            <div class="welcome-header">
+                <div class="welcome-emoji">🗺️</div>
+                <div class="welcome-title">DropPin</div>
+                <div class="welcome-subtitle">Drop notes and moments on a shared map!</div>
+            </div>
+            
+            <div class="welcome-divider"></div>
+
+            <div class="welcome-cards">
+                <div class="welcome-card public-card" onclick="joinPublicGroup()">
+                    <div class="card-emoji">🌍</div>
+                    <div class="card-title">Explore Public Map</div>
+                    <div class="card-desc">See what everyone's sharing around the world</div>
+                    <div class="card-arrow">→</div>
+                </div>
+                
+                <div class="welcome-card private-card locked" onclick="showComingSoon()">
+                    <div class="card-emoji">🔒</div>
+                    <div class="card-title">Private Groups</div>
+                    <div class="card-desc">Create or join private maps</div>
+                    <div class="card-badge">Coming Soon</div>
+                </div>
+            </div>
+
+            <button class="terms-and-privacy-btn" onclick="showInfo()">
+                <span>📋</span>
+                <span>Terms & Privacy</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== -->
+    <!-- TERMS AND PRIVACY SCREEN -->
+    <!-- ==================== -->
+
+    <div id="info-screen">
+        <div class="info-content">
+            <div class="info-header">
+                <span class="info-emoji">📍</span>
+                <div class="info-title">DropPin</div>
+                <div class="info-subtitle">Terms of Service & Privacy Policy</div>
+                <div class="info-date">Last updated: May 25, 2026</div>
+            </div>
+            
+            <div class="info-section">
+                <h3>🗺️ 1. What is DropPin?</h3>
+                <p>DropPin is an anonymous, location-based platform where users can place text pins on a shared global map.</p>
+
+                <p>🚀 <strong>Coming Soon:</strong></p>
+                <ul>
+                    <li><strong>Media Attachments</strong> — Photos, and voice notes.</li>
+                    <li><strong>Private Groups</strong> — Invite-only or password-protected maps.</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3>🔒 2. Anonymous by Design</h3>
+                <p>DropPin does not require accounts, emails, or phone numbers.</p>
+
+                <p>Your browser generates a random User ID stored locally on your device. This ID is used to:</p>
+                <ul>
+                    <li>Identify pins you created.</li>
+                    <li>Prevent duplicate reactions.</li>
+                    <li>Keep a consistent color marker for your pins.</li>
+                </ul>
+
+                <p>This ID is not linked to your real identity.</p>
+            </div>
+
+            <div class="info-section">
+                <h3>📦 3. Data Collection & Storage</h3>
+                <p>We only store data necessary to operate the shared map:</p>
+                <ul>
+                    <li><strong>Pin content</strong> — Text notes and chosen coordinates.</li>
+                    <li><strong>Anonymous User ID</strong> — Your browser-generated UUID.</li>
+                    <li><strong>Metadata</strong> — Timestamps and expiration settings.</li>
+                    <li><strong>Reactions</strong> — Emoji counts linked to anonymous IDs.</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3>🚫 4. Data We Do NOT Collect</h3>
+                <p>We do not collect:</p>
+                <ul>
+                    <li>Names, emails, phone numbers, or social profiles.</li>
+                    <li>Tracking cookies or browser histories.</li>
+                    <li>Background location data.</li>
+                    <li>Media files (until future media features launch).</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3>⏰ 5. Content Lifespan & Deletion</h3>
+                <p>You choose how long your pins remain visible:</p>
+
+                <ul>
+                    <li><strong>1, 7, or 30 days</strong> — Automatically deleted after expiration.</li>
+                </ul>
+
+                <p>To request early deletion, contact <strong>hello@droppin.app</strong> with your User ID and pin details.</p>
+            </div>
+
+            <div class="info-section">
+                <h3>🗑️ 6. Clearing Browser Data</h3>
+                <p>Clearing your browser data resets your local User ID.</p>
+
+                <ul>
+                    <li>A new anonymous ID will be created.</li>
+                    <li>Your old pins will remain but will no longer display as yours.</li>
+                    <li>Previous reactions will stay counted.</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3>⚠️ 7. Content Moderation & Safety</h3>
+                <p>DropPin is public. We may remove content that includes:</p>
+
+                <ul>
+                    <li>Harassment, hate speech, or bullying.</li>
+                    <li>Explicit or graphic material.</li>
+                    <li>Illegal content or personal information sharing.</li>
+                </ul>
+
+                <p>You are responsible for the content you post.</p>
+            </div>
+
+            <div class="info-section">
+                <h3>📋 8. Service Disclaimer</h3>
+                <p>DropPin is provided "as-is" without guarantees of uninterrupted service.</p>
+            </div>
+
+            <div class="info-section">
+                <h3>📝 9. Changes to These Terms</h3>
+                <p>These terms may change over time. Continued use of DropPin means you accept the latest version.</p>
+            </div>
+
+            <div class="info-section">
+                <h3>🆔 10. Your Anonymous User ID</h3>
+                <p>Save this ID if you need support regarding your pins:</p>
+                <div class="user-id-box" id="user-id-display">Loading...</div>
+            </div>
+            
+            <div class="agree-box">
+                <input type="checkbox" id="agree-check" onchange="toggleAgree()">
+                <label for="agree-check">I have read and agree to the Terms of Service & Privacy Policy</label>
+            </div>
+            
+            <div class="agree-btn-wrapper">
+                <button class="info-close btn-disabled" id="agree-btn" onclick="handleAgreeClick()">I Understand</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- MAP SCREEN           -->
+    <!-- ==================== -->
+
+    <div id="map-screen">
+        <div id="top-bar">
+            <div class="top-left">
+                <div class="top-logo">📍</div>
+                <div>
+                    <div class="top-title">DropPin</div>
+                    <div id="group-info">
+                        <span id="group-badge" class="public">PUBLIC</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="top-btn" onclick="goToWelcome()">← Back</button>
+        </div>
+        
+        <div id="map"></div>
+        
+        <button id="drop-btn" onclick="toggleDropMode()">+</button>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- DROP PIN MODAL       -->
+    <!-- ==================== -->
+
+    <div class="modal-overlay" id="drop-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-emoji">📍</div>
+                <h2>Drop a Pin</h2>
+                <div class="modal-subtitle">Leave something on the map!</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Your Note</label>
+                <textarea id="pin-text"></textarea>
+            </div>
+            
+            <div class="media-tabs">
+                <div class="media-tab locked" onclick="showComingSoonMedia('photo')">
+                    <span class="emoji">📸</span>
+                    <span class="label">Photo</span>
+                </div>
+                <div class="media-tab locked" onclick="showComingSoonMedia('audio')">
+                    <span class="emoji">🎙️</span>
+                    <span class="label">Audio</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>How long should it stay?</label>
+                <div class="lifespan-options">
+                    <button class="lifespan-btn" data-days="1" onclick="setLifespan(1)">1 day</button>
+                    <button class="lifespan-btn" data-days="7" onclick="setLifespan(7)">7 days</button>
+                    <button class="lifespan-btn active" data-days="30" onclick="setLifespan(30)">30 days</button>
+                </div>
+            </div>
+            
+            <button class="submit-btn" id="submit-btn" onclick="submitPin()">Drop</button>
+            <button class="cancel-btn" onclick="cancelDrop()">Cancel</button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- TOAST                -->
+    <!-- ==================== -->
+
+    <div class="toast" id="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
