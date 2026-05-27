@@ -519,6 +519,15 @@ async function react(btn, pinId, emoji) {
         if (error) {
             if (error.code !== '23505') throw error;
         }
+
+        if (window._lastLoadedPins) {
+            const cachedPin = window._lastLoadedPins.find(p => p.id === pinId);
+            if (cachedPin) {
+                if (!cachedPin.reactions) cachedPin.reactions = [];
+                cachedPin.reactions.push({ emoji: emoji, user_id: CURRENT_USER_ID });
+            }
+        }
+        
     } catch (err) {
         console.error('Failed to save reaction:', err);
         count.textContent = parseInt(count.textContent) - 1;
