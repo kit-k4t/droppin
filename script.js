@@ -196,7 +196,11 @@ function showComingSoon() {
 // ============================================
 
 function initMap() {
-    map = L.map('map').setView([14.5995, 120.9842], 13);
+    map = L.map('map', {
+        center: [14.5995, 120.9842],
+        zoom: 13,
+        worldCopyJump: true
+    });
     
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -453,7 +457,9 @@ function buildPinPopup(pin) {
 }
 
 function addPinToMap(pin) {
-    const marker = L.marker([parseFloat(pin.lat), parseFloat(pin.lng)]).addTo(map);
+    const marker = L.marker([parseFloat(pin.lat), parseFloat(pin.lng)], {
+        worldCopyJump: true
+    }).addTo(map);
     
     const popup = buildPinPopup(pin);
     marker.bindPopup(popup);
