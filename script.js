@@ -1,12 +1,7 @@
-// ============================================
-// DropPin - Supabase Edition
-// ============================================
-
 const SUPABASE_URL = 'https://mzhbxzlzrohtpuxmfofa.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16aGJ4emx6cm9odHB1eG1mb2ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzQ3ODAsImV4cCI6MjA5NTQ1MDc4MH0.d6iREHNC9IlECcO3zoIDW8y0LfprKmwSAdgmejKA9O0';
 const PUBLIC_GROUP_ID = '00000000-0000-0000-0000-000000000001';
 
-// Initialize Supabase client
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let CURRENT_USER_ID = localStorage.getItem('droppin_user_id');
