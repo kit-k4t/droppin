@@ -257,6 +257,10 @@ function initMap() {
     map.on('popupclose', () => {
         playSound('bloop');
     });
+
+    map.on('zoomstart', () => {
+        playSound('click');
+    });
     
     setTimeout(() => map.invalidateSize(), 100);
 }
@@ -415,7 +419,7 @@ async function loadPins() {
 function buildPinPopup(pin) {
     const userColor = stringToColor(pin.user_id);
     const isOurPin = CURRENT_USER_ID && pin.user_id === CURRENT_USER_ID;
-    const pinTime = new Date(pin.created_at);
+    const pinTime = pin.created_at ? new Date(pin.created_at) : null;
     const lifespanText = `${pin.lifespan_days} day/s`;
     
     const emojis = ['🔥', '❤️', '😂', '💀'];
@@ -456,7 +460,7 @@ function buildPinPopup(pin) {
             <div class="author">
                 <div class="author-dot ${isOurPin ? 'you' : ''}" style="background:${userColor};"></div>
                 <div class="author-name ${isOurPin ? 'you' : ''}">${isOurPin ? 'You' : 'Anonymous'}</div>
-                <div class="time">${timeAgo(pinTime)}</div>
+                <div class="time">${pinTime ? timeAgo(pinTime) : 'just now'}</div>
             </div>
             ${pin.text ? `<div class="text">${escapeHtml(pin.text)}</div>` : ''}
             <div class="reactions">
@@ -539,9 +543,12 @@ async function react(btn, pinId, emoji) {
 // ============================================
 
 function timeAgo(date) {
+    if (!date || isNaN(date.getTime())) return 'just now';
+    
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
     
+    if (seconds < 0) return 'just now';
     if (seconds < 10) return 'just now';
     if (seconds < 60) return `${seconds}s ago`;
     
@@ -552,7 +559,7 @@ function timeAgo(date) {
     if (hours < 24) return `${hours}h ago`;
     
     const days = Math.floor(hours / 24);
-    if (days < 7) return `${days}d ago`;
+    return `${days}d ago`;  // 1–29 days, then it expires
 }
 
 function stringToColor(str) {
